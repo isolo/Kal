@@ -8,6 +8,7 @@
 #import "KalDataSource.h" // for the KalDataSourceCallbacks protocol
 
 @class KalLogic;
+@class KalColorSource;
 
 /*
  *    KalViewController
@@ -20,24 +21,25 @@
  *  date is selected (just like in Apple's calendar app).
  *
  */
-@interface KalViewController : UIViewController <KalViewDelegate, KalDataSourceCallbacks>
-{
-  KalLogic *logic;
-  UITableView *tableView;
-  id <UITableViewDelegate> __unsafe_unretained delegate;
-  id <KalDataSource> __unsafe_unretained dataSource;
+@interface KalViewController : UIViewController <KalViewDelegate, KalDataSourceCallbacks> {
+    KalLogic *logic;
+    UITableView *tableView;
+    id <UITableViewDelegate> __unsafe_unretained delegate;
+    id <KalDataSource> __unsafe_unretained dataSource;
+    KalColorSource *colorSource;
 }
 
-@property (nonatomic, unsafe_unretained) id<UITableViewDelegate> delegate;
-@property (nonatomic, unsafe_unretained) id<KalDataSource> dataSource;
-@property (nonatomic, strong) NSDate *selectedDate;
-@property (nonatomic, strong) NSDate *beginDate;
-@property (nonatomic, strong) NSDate *endDate;
-@property (nonatomic, assign) KalSelectionMode *selectionMode;
-@property (nonatomic, strong) NSDate *minAvailableDate;
-@property (nonatomic, strong) NSDate *maxAVailableDate;
+@property(nonatomic, unsafe_unretained) id <UITableViewDelegate> delegate;
+@property(nonatomic, unsafe_unretained) id <KalDataSource> dataSource;
+@property(nonatomic, strong) NSDate *selectedDate;
+@property(nonatomic, strong) NSDate *beginDate;
+@property(nonatomic, strong) NSDate *endDate;
+@property(nonatomic, assign) KalSelectionMode *selectionMode;
+@property(nonatomic, strong) NSDate *minAvailableDate;
+@property(nonatomic, strong) NSDate *maxAVailableDate;
 
-- (id)initWithSelectionMode:(KalSelectionMode)selectionMode;
+- (id)initWithSelectionMode:(KalSelectionMode)selectionMode colorSource:(KalColorSource *)source;
+
 - (void)reloadData;                                 // If you change the KalDataSource after the KalViewController has already been displayed to the user, you must call this method in order for the view to reflect the new data.
 - (void)showAndSelectDate:(NSDate *)date;           // Updates the state of the calendar to display the specified date's month and selects the tile for that date.
 

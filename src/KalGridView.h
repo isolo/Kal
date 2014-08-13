@@ -12,6 +12,7 @@ typedef enum {
 
 @class KalTileView, KalMonthView, KalLogic;
 @protocol KalViewDelegate;
+@class KalColorSource;
 
 /*
  *    KalGridView
@@ -23,28 +24,31 @@ typedef enum {
  *  (it is managed by KalView).
  *
  */
-@interface KalGridView : UIView
-{
-  id<KalViewDelegate> delegate;  // Assigned.
-  KalLogic *logic;
-  KalMonthView *frontMonthView;
-  KalMonthView *backMonthView;
+@interface KalGridView : UIView {
+    id <KalViewDelegate> delegate;  // Assigned.
+    KalLogic *logic;
+    KalMonthView *frontMonthView;
+    KalMonthView *backMonthView;
+    KalColorSource *colorSource;
 }
 
-@property (nonatomic, assign) BOOL transitioning;
-@property (nonatomic, assign) KalSelectionMode selectionMode;
-@property (nonatomic, strong) NSDate *minAvailableDate;
-@property (nonatomic, strong) NSDate *maxAVailableDate;
-@property (nonatomic, strong) NSDate *beginDate;
-@property (nonatomic, strong) NSDate *endDate;
+@property(nonatomic, assign) BOOL transitioning;
+@property(nonatomic, assign) KalSelectionMode selectionMode;
+@property(nonatomic, strong) NSDate *minAvailableDate;
+@property(nonatomic, strong) NSDate *maxAVailableDate;
+@property(nonatomic, strong) NSDate *beginDate;
+@property(nonatomic, strong) NSDate *endDate;
 
-- (id)initWithFrame:(CGRect)frame logic:(KalLogic *)logic delegate:(id<KalViewDelegate>)delegate;
+- (id)initWithFrame:(CGRect)frame logic:(KalLogic *)theLogic delegate:(id <KalViewDelegate>)theDelegate colorSource:(KalColorSource *)source;
+
 - (void)markTilesForDates:(NSArray *)dates;
 
 // These 3 methods should be called *after* the KalLogic
 // has moved to the previous or following month.
 - (void)slideUp;
+
 - (void)slideDown;
+
 - (void)jumpToSelectedMonth;    // see comment on KalView
 
 @end

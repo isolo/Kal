@@ -72,14 +72,17 @@
 @protocol KalDataSourceCallbacks;
 
 @protocol KalDataSource <NSObject, UITableViewDataSource>
-- (void)presentingDatesFrom:(NSDate *)fromDate to:(NSDate *)toDate delegate:(id<KalDataSourceCallbacks>)delegate;
+- (void)presentingDatesFrom:(NSDate *)fromDate to:(NSDate *)toDate delegate:(id <KalDataSourceCallbacks>)delegate;
+
 - (NSArray *)markedDatesFrom:(NSDate *)fromDate to:(NSDate *)toDate;
+
 - (void)loadItemsFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate;
+
 - (void)removeAllItems;
 @end
 
 @protocol KalDataSourceCallbacks <NSObject>
-- (void)loadedDataSource:(id<KalDataSource>)dataSource;
+- (void)loadedDataSource:(id <KalDataSource>)dataSource;
 @end
 
 #pragma mark -
@@ -92,8 +95,7 @@
  *
  */
 
-@interface SimpleKalDataSource : NSObject <KalDataSource>
-{
+@interface SimpleKalDataSource : NSObject <KalDataSource> {
 }
-+ (SimpleKalDataSource*)dataSource;
++ (SimpleKalDataSource *)dataSource;
 @end

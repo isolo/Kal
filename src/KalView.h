@@ -8,6 +8,7 @@
 
 @class KalLogic;
 @protocol KalViewDelegate, KalDataSourceCallbacks;
+@class KalColorSource;
 
 /*
  *    KalView
@@ -38,25 +39,30 @@
  *       +-----------------------------------------+
  *
  */
-@interface KalView : UIView
-{
-  UILabel *headerTitleLabel;
-  KalLogic *logic;
+@interface KalView : UIView {
+    UILabel *headerTitleLabel;
+    KalLogic *logic;
+    KalColorSource *colorSource;
 }
 
-@property (nonatomic, weak) id<KalViewDelegate> delegate;
-@property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) KalGridView *gridView;
+@property(nonatomic, weak) id <KalViewDelegate> delegate;
+@property(nonatomic, strong) UITableView *tableView;
+@property(nonatomic, strong) KalGridView *gridView;
 
-- (id)initWithFrame:(CGRect)frame delegate:(id<KalViewDelegate>)delegate logic:(KalLogic *)logic;
+- (id)initWithFrame:(CGRect)frame delegate:(id <KalViewDelegate>)delegate logic:(KalLogic *)logic colorSource:(KalColorSource *)source;
+
 - (BOOL)isSliding;
+
 - (void)markTilesForDates:(NSArray *)dates;
+
 - (void)redrawEntireMonth;
 
 // These 3 methods are exposed for the delegate. They should be called 
 // *after* the KalLogic has moved to the month specified by the user.
 - (void)slideDown;
+
 - (void)slideUp;
+
 - (void)jumpToSelectedMonth;    // change months without animation (i.e. when directly switching to "Today")
 
 @end
@@ -68,8 +74,11 @@
 @optional
 
 - (void)showPreviousMonth;
+
 - (void)showFollowingMonth;
+
 - (void)didSelectDate:(NSDate *)date;
+
 - (void)didSelectBeginDate:(NSDate *)beginDate endDate:(NSDate *)endDate;
 
 @end

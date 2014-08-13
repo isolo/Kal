@@ -7,6 +7,7 @@
 #import "EventKitDataSource.h"
 #import "Kal.h"
 #import "NSDate+Convenience.h"
+#import "KalColorSource.h"
 #import <EventKit/EventKit.h>
 #import <EventKitUI/EventKitUI.h>
 
@@ -29,7 +30,11 @@
     kal = [[KalViewController alloc] initWithSelectionMode:KalSelectionModeSingle];
     kal.selectedDate = [NSDate dateStartOfDay:[[NSDate date] offsetDay:1]];
 #else
-    kal = [[KalViewController alloc] initWithSelectionMode:KalSelectionModeRange];
+    KalColorSource *source = [[KalColorSource alloc] init];
+    source.inactiveColor = [UIColor grayColor];
+    source.normalColor = [UIColor blackColor];
+    source.selectedColor = [UIColor whiteColor];
+    kal = [[KalViewController alloc] initWithSelectionMode:KalSelectionModeRange colorSource:source];
     kal.beginDate = [NSDate dateStartOfDay:[NSDate date]];
     kal.endDate = [NSDate dateStartOfDay:[[NSDate date] offsetDay:1]];
 #endif

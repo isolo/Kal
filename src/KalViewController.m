@@ -5,8 +5,8 @@
 
 #import "KalViewController.h"
 #import "KalLogic.h"
-#import "KalDataSource.h"
 #import "KalPrivate.h"
+#import "KalColorSource.h"
 
 #define PROFILER 0
 #if PROFILER
@@ -31,7 +31,7 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 
 @interface KalViewController ()
 
-- (KalView*)calendarView;
+- (KalView *)calendarView;
 
 @end
 
@@ -39,43 +39,38 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 
 @synthesize dataSource, delegate;
 
-- (void)setSelectedDate:(NSDate *)selectedDate
-{
+- (void)setSelectedDate:(NSDate *)selectedDate {
     _selectedDate = selectedDate;
     self.calendarView.gridView.beginDate = _selectedDate;
     [self showAndSelectDate:_selectedDate];
 }
 
-- (void)setBeginDate:(NSDate *)beginDate
-{
+- (void)setBeginDate:(NSDate *)beginDate {
     _beginDate = beginDate;
     self.calendarView.gridView.beginDate = _beginDate;
     [self showAndSelectDate:_beginDate];
 }
 
-- (void)setEndDate:(NSDate *)endDate
-{
+- (void)setEndDate:(NSDate *)endDate {
     _endDate = endDate;
     self.calendarView.gridView.endDate = _endDate;
-    [(KalView *)self.view redrawEntireMonth];
+    [(KalView *) self.view redrawEntireMonth];
 }
 
-- (void)setMinAvailableDate:(NSDate *)minAvailableDate
-{
+- (void)setMinAvailableDate:(NSDate *)minAvailableDate {
     _minAvailableDate = minAvailableDate;
-    ((KalView *)self.view).gridView.minAvailableDate = minAvailableDate;
-    [(KalView *)self.view redrawEntireMonth];
+    ((KalView *) self.view).gridView.minAvailableDate = minAvailableDate;
+    [(KalView *) self.view redrawEntireMonth];
 }
 
-- (void)setMaxAVailableDate:(NSDate *)maxAVailableDate
-{
+- (void)setMaxAVailableDate:(NSDate *)maxAVailableDate {
     _maxAVailableDate = maxAVailableDate;
-    ((KalView *)self.view).gridView.maxAVailableDate = maxAVailableDate;
-    [(KalView *)self.view redrawEntireMonth];
+    ((KalView *) self.view).gridView.maxAVailableDate = maxAVailableDate;
+    [(KalView *) self.view redrawEntireMonth];
 }
 
-- (id)initWithSelectionMode:(KalSelectionMode)selectionMode;
-{
+- (id)initWithSelectionMode:(KalSelectionMode)selectionMode colorSource:(KalColorSource *)source {
+    colorSource = source;
     if ((self = [super init])) {
         logic = [[KalLogic alloc] initForDate:[NSDate date]];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(significantTimeChangeOccurred) name:UIApplicationSignificantTimeChangeNotification object:nil];
@@ -88,42 +83,38 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
     return self;
 }
 
-- (id)init
-{
-    return [self initWithSelectionMode:KalSelectionModeSingle];
+- (id)init {
+    return [self initWithSelectionMode:KalSelectionModeSingle colorSource:[[KalColorSource alloc] init]];
 }
 
-- (KalView*)calendarView { return (KalView*)self.view; }
+- (KalView *)calendarView {
+    return (KalView *) self.view;
+}
 
-- (void)setDataSource:(id<KalDataSource>)aDataSource
-{
+- (void)setDataSource:(id <KalDataSource>)aDataSource {
     if (dataSource != aDataSource) {
         dataSource = aDataSource;
         tableView.dataSource = dataSource;
     }
 }
 
-- (void)setDelegate:(id<UITableViewDelegate>)aDelegate
-{
+- (void)setDelegate:(id <UITableViewDelegate>)aDelegate {
     if (delegate != aDelegate) {
         delegate = aDelegate;
         tableView.delegate = delegate;
     }
 }
 
-- (void)clearTable
-{
+- (void)clearTable {
     [dataSource removeAllItems];
     [tableView reloadData];
 }
 
-- (void)reloadData
-{
+- (void)reloadData {
     [dataSource presentingDatesFrom:logic.fromDate to:logic.toDate delegate:self];
 }
 
-- (void)significantTimeChangeOccurred
-{
+- (void)significantTimeChangeOccurred {
     [[self calendarView] jumpToSelectedMonth];
     [self reloadData];
 }
@@ -131,8 +122,7 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 // -----------------------------------------
 #pragma mark KalViewDelegate protocol
 
-- (void)didSelectDate:(NSDate *)date
-{
+- (void)didSelectDate:(NSDate *)date {
     _selectedDate = date;
     NSDate *from = [date cc_dateByMovingToBeginningOfDay];
     NSDate *to = [date cc_dateByMovingToEndOfDay];
@@ -142,8 +132,7 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
     [tableView flashScrollIndicators];
 }
 
-- (void)didSelectBeginDate:(NSDate *)beginDate endDate:(NSDate *)endDate
-{
+- (void)didSelectBeginDate:(NSDate *)beginDate endDate:(NSDate *)endDate {
     _beginDate = beginDate;
     _endDate = endDate;
     [self clearTable];
@@ -152,16 +141,14 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
     [tableView flashScrollIndicators];
 }
 
-- (void)showPreviousMonth
-{
+- (void)showPreviousMonth {
     [self clearTable];
     [logic retreatToPreviousMonth];
     [[self calendarView] slideDown];
     [self reloadData];
 }
 
-- (void)showFollowingMonth
-{
+- (void)showFollowingMonth {
     [self clearTable];
     [logic advanceToFollowingMonth];
     [[self calendarView] slideUp];
@@ -171,89 +158,81 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 // -----------------------------------------
 #pragma mark KalDataSourceCallbacks protocol
 
-- (void)loadedDataSource:(id<KalDataSource>)theDataSource;
-{
+- (void)loadedDataSource:(id <KalDataSource>)theDataSource; {
     NSArray *markedDates = [theDataSource markedDatesFrom:logic.fromDate to:logic.toDate];
     NSMutableArray *dates = [markedDates mutableCopy];
-    for (int i=0; i<[dates count]; i++)
-        [dates replaceObjectAtIndex:i withObject:[dates objectAtIndex:i]];
-    
+    for (int i = 0; i < [dates count]; i++)
+        dates[i] = dates[i];
+
     [[self calendarView] markTilesForDates:dates];
 }
 
 // ---------------------------------------
 #pragma mark -
 
-- (void)showAndSelectDate:(NSDate *)date
-{
+- (void)showAndSelectDate:(NSDate *)date {
     if ([[self calendarView] isSliding])
         return;
-    
+
     [logic moveToMonthForDate:date];
-    
+
 #if PROFILER
     uint64_t start, end;
     struct timespec tp;
     start = mach_absolute_time();
 #endif
-    
+
     [[self calendarView] jumpToSelectedMonth];
-    
+
 #if PROFILER
     end = mach_absolute_time();
     mach_absolute_difference(end, start, &tp);
     printf("[[self calendarView] jumpToSelectedMonth]: %.1f ms\n", tp.tv_nsec / 1e6);
 #endif
-    
+
     [self reloadData];
 }
 
 // -----------------------------------------------------------------------------------
 #pragma mark UIViewController
 
-- (void)loadView
-{
-    if (!self.title)
-        self.title = @"Calendar";
-    KalView *kalView = [[KalView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame] delegate:self logic:logic];
+- (void)loadView {
+    KalView *kalView = [[KalView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame] delegate:self logic:logic colorSource:colorSource];
     kalView.gridView.selectionMode = self.selectionMode;
     self.view = kalView;
     tableView = kalView.tableView;
     tableView.dataSource = dataSource;
     tableView.delegate = delegate;
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self reloadData];
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
     tableView = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [tableView reloadData];
-    if ([self.navigationController.navigationBar respondsToSelector:@selector(setBarTintColor:)]) {
-        self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
-        self.navigationController.navigationBar.tintColor = [UIColor orangeColor];
-    } else {
-        self.navigationController.navigationBar.tintColor = [UIColor blackColor];
-    }
-    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : kLightGrayColor, NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue" size:20]};
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
+//    if ([self.navigationController.navigationBar respondsToSelector:@selector(setBarTintColor:)]) {
+//        self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
+//        self.navigationController.navigationBar.tintColor = [UIColor orangeColor];
+//    } else {
+//        self.navigationController.navigationBar.tintColor = [UIColor blackColor];
+//    }
+//    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : kLightGrayColor, NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue" size:20]};
+//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [tableView flashScrollIndicators];
 }
 
 #pragma mark -
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationSignificantTimeChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:KalDataSourceChangedNotification object:nil];
 }

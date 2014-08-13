@@ -51,13 +51,11 @@
                                       toDate:self options:0];
 }
 
-- (BOOL)isToday
-{
+- (BOOL)isToday {
     return [[NSDate dateStartOfDay:self] isEqualToDate:[NSDate dateStartOfDay:[NSDate date]]];
 }
 
-+ (NSDate *)dateForDay:(unsigned int)day month:(unsigned int)month year:(unsigned int)year
-{
++ (NSDate *)dateForDay:(unsigned int)day month:(unsigned int)month year:(unsigned int)year {
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents *components = [[NSDateComponents alloc] init];
     components.day = day;

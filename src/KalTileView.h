@@ -5,14 +5,16 @@
 
 #import <UIKit/UIKit.h>
 
+@class KalColorSource;
+
 typedef enum {
-    KalTileTypeRegular   = 0,
-    KalTileTypeAdjacent  = 1 << 0,
-    KalTileTypeToday     = 1 << 1,
-    KalTileTypeFirst     = 1 << 2,
-    KalTileTypeLast      = 1 << 3,
-    KalTileTypeDisable   = 1 << 4,
-    KalTileTypeMarked    = 1 << 5,
+    KalTileTypeRegular = 0,
+    KalTileTypeAdjacent = 1 << 0,
+    KalTileTypeToday = 1 << 1,
+    KalTileTypeFirst = 1 << 2,
+    KalTileTypeLast = 1 << 3,
+    KalTileTypeDisable = 1 << 4,
+    KalTileTypeMarked = 1 << 5,
 } KalTileType;
 
 typedef enum {
@@ -24,24 +26,31 @@ typedef enum {
     KalTileStateRightEnd,
 } KalTileState;
 
-@interface KalTileView : UIView
-{
+@interface KalTileView : UIView {
     CGPoint origin;
+    KalColorSource *colorSource;
 }
 
-@property (nonatomic, strong) NSDate *date;
-@property (nonatomic, assign) KalTileState state;
-@property (nonatomic, assign) KalTileType type;
-@property (nonatomic, getter = isMarked) BOOL marked;
-@property (nonatomic, getter = isToday) BOOL today;
-@property (nonatomic, getter = isFirst) BOOL first;
-@property (nonatomic, getter = isLast) BOOL last;
+@property(nonatomic, strong) NSDate *date;
+@property(nonatomic, assign) KalTileState state;
+@property(nonatomic, assign) KalTileType type;
+@property(nonatomic, getter = isMarked) BOOL marked;
+@property(nonatomic, getter = isToday) BOOL today;
+@property(nonatomic, getter = isFirst) BOOL first;
+@property(nonatomic, getter = isLast) BOOL last;
+
+- (id)initWithFrame:(CGRect)frame colorSource:(KalColorSource *)source;
 
 - (void)resetState;
+
 - (BOOL)isToday;
+
 - (BOOL)isFirst;
+
 - (BOOL)isLast;
+
 - (BOOL)isDisable;
+
 - (BOOL)belongsToAdjacentMonth;
 
 @end

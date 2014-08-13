@@ -11,12 +11,19 @@
 // their calculations.
 
 - (NSDate *)cc_dateByMovingToBeginningOfDay;
+
 - (NSDate *)cc_dateByMovingToEndOfDay;
+
 - (NSDate *)cc_dateByMovingToFirstDayOfTheMonth;
+
 - (NSDate *)cc_dateByMovingToFirstDayOfThePreviousMonth;
+
 - (NSDate *)cc_dateByMovingToFirstDayOfTheFollowingMonth;
+
 - (NSDateComponents *)cc_componentsForMonthDayAndYear;
+
 - (NSUInteger)cc_weekday;
+
 - (NSUInteger)cc_numberOfDaysInMonth;
 
 @end
