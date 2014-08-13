@@ -11,6 +11,6 @@ Pod::Spec.new do |s|
 
 	s.source = { :git => "https://github.com/isolo/Kal.git" }
 	s.source_files = 'src', '*.{h,m}'
-	s.resource_bundle = { 'Kal' => 'src/Kal.bundle' }
+	s.resource = 'src/Kal.bundle'
 	s.public_header_files = '*.h'
 end
