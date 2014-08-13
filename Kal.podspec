@@ -13,4 +13,5 @@ Pod::Spec.new do |s|
 	s.source_files = 'src', '*.{h,m}'
 	s.resource = 'src/Kal.bundle'
 	s.public_header_files = '*.h'
+	s.prefix_header_file = 'src/Kal_Prefix.pch'
 end
