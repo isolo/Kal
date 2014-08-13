@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
 	s.homepage = "https://github.com/klazuka/Kal"
 	s.author = { "Keith Lazuka" => "klazuka@gmail.com" }
 
-	s.platform = :ios, '7.1'
+	s.platform = :ios, '6.0'
 	s.requires_arc = true
 
 	s.source = { :git => "https://github.com/isolo/Kal.git" }
