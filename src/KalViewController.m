@@ -72,7 +72,7 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 - (id)initWithCoder:(NSCoder *)coder
 {
     if ((self = [super initWithCoder:coder])) {
-        [self init:KalSelectionModeRange colorSource:[[KalColorSource alloc] init]];
+        [self init:KalSelectionModeRange colorSource:colorSource];
     }
     return self;
 }
@@ -91,6 +91,10 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 
 - (void)init:(KalSelectionMode)selectionMode colorSource:(KalColorSource *)source {
     colorSource = source;
+
+    if (!colorSource)
+        colorSource = [[KalColorSource alloc] init];
+
     logic = [[KalLogic alloc] initForDate:[NSDate date]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(significantTimeChangeOccurred) name:UIApplicationSignificantTimeChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:KalDataSourceChangedNotification object:nil];
