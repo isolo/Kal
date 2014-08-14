@@ -46,9 +46,9 @@
      *
      */
     kal.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Today", @"") style:UIBarButtonItemStyleBordered target:self action:@selector(showAndSelectToday)];
-    kal.delegate = self;
-    dataSource = [[EventKitDataSource alloc] init];
-    kal.dataSource = dataSource;
+//    kal.delegate = self;
+//    dataSource = [[EventKitDataSource alloc] init];
+    //kal.dataSource = dataSource;
     kal.minAvailableDate = [NSDate dateStartOfDay:[[NSDate date] offsetDay:-5]];
     kal.maxAVailableDate = [kal.minAvailableDate offsetDay:30];
     
