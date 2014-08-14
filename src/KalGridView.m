@@ -105,7 +105,7 @@ static NSString *kSlideAnimationId = @"KalSwitchMonths";
     if (self = [super initWithFrame:frame]) {
         _needRemoveRanges = YES;
         self.clipsToBounds = YES;
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = colorSource.gridBackgroundColor;
         logic = theLogic;
         delegate = theDelegate;
 

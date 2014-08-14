@@ -13,4 +13,7 @@
 @property UIColor *selectedColor;
 @property UIColor *inactiveColor;
 
+@property UIColor *gridBackgroundColor;
+@property UIColor *viewBackgroundColor;
+
 @end

@@ -31,7 +31,7 @@ static const CGFloat kMonthLabelHeight = 17.f;
         [logic addObserver:self forKeyPath:@"selectedMonthNameAndYear" options:NSKeyValueObservingOptionNew context:NULL];
         self.autoresizesSubviews = YES;
         self.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-//        self.backgroundColor = RGBCOLOR(246, 246, 246);
+        self.backgroundColor = colorSource.viewBackgroundColor;
 
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, frame.size.width, kHeaderHeight)];
         [self addSubviewsToHeaderView:headerView];
