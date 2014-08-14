@@ -153,6 +153,7 @@ static const CGFloat kMonthLabelHeight = 17.f;
     // The list of events for the selected day
     self.tableView = [[UITableView alloc] initWithFrame:fullWidthAutomaticLayoutFrame style:UITableViewStylePlain];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.tableView.backgroundColor = colorSource.viewBackgroundColor;
     [contentView addSubview:self.tableView];
 
     // Trigger the initial KVO update to finish the contentView layout
