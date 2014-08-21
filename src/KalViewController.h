@@ -27,6 +27,9 @@
     id <UITableViewDelegate> __unsafe_unretained delegate;
     id <KalDataSource> __unsafe_unretained dataSource;
     KalColorSource *colorSource;
+    
+@protected
+    KalView *kalView;
 }
 
 @property(nonatomic, unsafe_unretained) id <UITableViewDelegate> delegate;
@@ -39,6 +42,8 @@
 @property(nonatomic, strong) NSDate *maxAVailableDate;
 
 - (id)initWithSelectionMode:(KalSelectionMode)selectionMode colorSource:(KalColorSource *)source;
+
+- (void)initKalView;
 
 - (void)reloadData;                                 // If you change the KalDataSource after the KalViewController has already been displayed to the user, you must call this method in order for the view to reflect the new data.
 - (void)showAndSelectDate:(NSDate *)date;           // Updates the state of the calendar to display the specified date's month and selects the tile for that date.

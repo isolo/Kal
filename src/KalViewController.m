@@ -13,6 +13,9 @@
 #include <mach/mach_time.h>
 #include <time.h>
 #include <math.h>
+
+@synthesize view;
+
 void mach_absolute_difference(uint64_t end, uint64_t start, struct timespec *tp)
 {
     uint64_t difference = end - start;
@@ -54,19 +57,19 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 - (void)setEndDate:(NSDate *)endDate {
     _endDate = endDate;
     self.calendarView.gridView.endDate = _endDate;
-    [(KalView *) self.view redrawEntireMonth];
+    [kalView redrawEntireMonth];
 }
 
 - (void)setMinAvailableDate:(NSDate *)minAvailableDate {
     _minAvailableDate = minAvailableDate;
-    ((KalView *) self.view).gridView.minAvailableDate = minAvailableDate;
-    [(KalView *) self.view redrawEntireMonth];
+    (kalView).gridView.minAvailableDate = minAvailableDate;
+    [kalView redrawEntireMonth];
 }
 
 - (void)setMaxAVailableDate:(NSDate *)maxAVailableDate {
     _maxAVailableDate = maxAVailableDate;
-    ((KalView *) self.view).gridView.maxAVailableDate = maxAVailableDate;
-    [(KalView *) self.view redrawEntireMonth];
+    (kalView).gridView.maxAVailableDate = maxAVailableDate;
+    [kalView redrawEntireMonth];
 }
 
 - (id)initWithCoder:(NSCoder *)coder
@@ -105,7 +108,7 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 }
 
 - (KalView *)calendarView {
-    return (KalView *) self.view;
+    return kalView;
 }
 
 - (void)setDataSource:(id <KalDataSource>)aDataSource {
@@ -213,14 +216,24 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 // -----------------------------------------------------------------------------------
 #pragma mark UIViewController
 
+- (void)initKalView {
+    kalView = [[KalView alloc] initWithFrame:[[UIScreen mainScreen] bounds] delegate:self logic:logic colorSource:colorSource];
+}
+
 - (void)loadView {
-    KalView *kalView = [[KalView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame] delegate:self logic:logic colorSource:colorSource];
+    [super loadView];
+    
+    [self initKalView];
+        
     kalView.gridView.selectionMode = self.selectionMode;
-    self.view = kalView;
+    [self.view addSubview:kalView];
+    
     tableView = kalView.tableView;
     tableView.dataSource = dataSource;
     tableView.delegate = delegate;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+
+    
     [self reloadData];
 }
 
@@ -232,19 +245,16 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [tableView reloadData];
-//    if ([self.navigationController.navigationBar respondsToSelector:@selector(setBarTintColor:)]) {
-//        self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
-//        self.navigationController.navigationBar.tintColor = [UIColor orangeColor];
-//    } else {
-//        self.navigationController.navigationBar.tintColor = [UIColor blackColor];
-//    }
-//    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : kLightGrayColor, NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue" size:20]};
-//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [tableView flashScrollIndicators];
+}
+
+- (void)viewDidLoad {
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
+        self.edgesForExtendedLayout = UIRectEdgeNone;
 }
 
 #pragma mark -
